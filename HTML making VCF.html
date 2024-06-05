@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create VCF File</title>
+</head>
+<body>
+    <h2>Create VCF File</h2>
+    <form id="contactForm">
+        <label for="name">First Name:</label><br>
+        <input type="text" id="firstname" name="name" required><br><br>
+        <label for="name">Last Name:</label><br>
+        <input type="text" id="lastname" name="name" required><br><br>
+        <label for="phone">Phone:</label><br>
+        <input type="tel" id="phone" name="phone" required><br><br>
+        <!-- <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required><br><br> -->
+        <button type="button" onclick="createVCF()">Create VCF</button>
+    </form>
+
+    <script>
+        function createVCF() {
+            const firstname = document.getElementById('firstname').value;
+            const lastname = document.getElementById('lastname').value;
+            const phone = document.getElementById('phone').value;
+            // const email = document.getElementById('email').value;
+
+            const vcfContent = `BEGIN:VCARD
+VERSION:2.1
+N:${lastname};${firstname};;;
+FN:${firstname} ${lastname}
+TEL;CELL:${phone}
+END:VCARD`;
+
+            const blob = new Blob([vcfContent], { type: 'text/vcard' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${firstname} ${lastname}.vcf`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
