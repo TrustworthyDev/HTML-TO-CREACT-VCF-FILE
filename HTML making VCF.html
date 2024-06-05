@@ -16,29 +16,56 @@
         <input type="tel" id="phone" name="phone" required><br><br>
         <label for="email">Email:</label><br>
         <input type="email" id="email" name="email" required><br><br>
+        <button type="button" onclick="addVCF()">Add VCF</button>
         <button type="button" onclick="createVCF()">Create VCF</button>
     </form>
 
     <script>
-        function createVCF() {
+        var vcfContent = ``;
+        var count = 0;
+
+        function addVCF() {
             const firstname = document.getElementById('firstname').value;
             const lastname = document.getElementById('lastname').value;
             const phone = document.getElementById('phone').value;
             const email = document.getElementById('email').value;
 
-            const vcfContent = `BEGIN:VCARD
+            if(count == 0){
+                vcfContent += `BEGIN:VCARD
 VERSION:2.1
 N:${lastname};${firstname};;;
 FN:${firstname} ${lastname}
 TEL;CELL:${phone}
 EMAIL;HOME:${email}
-END:VCARD`;
+END:VCARD\n`;
+            } else {
+                vcfContent += `BEGIN:VCARD
+VERSION:2.1
+N:${lastname};${firstname};;;
+FN:${firstname} ${lastname}
+TEL;CELL:${phone}
+EMAIL;HOME:${email}
+END:VCARD`;   
+
+            }
+            
+
+            document.getElementById('firstname').value='';
+            document.getElementById('lastname').value='';
+            document.getElementById('phone').value='';
+            document.getElementById('email').value='';
+
+            document.getElementById('firstname').focus();
+            count++;
+        }
+
+        function createVCF() {
 
             const blob = new Blob([vcfContent], { type: 'text/vcard' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `${firstname} ${lastname}.vcf`;
+            a.download = `contacts.vcf`;
             document.body.appendChild(a);
             a.click();
             document.body.removeChild(a);
